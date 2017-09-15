@@ -160,14 +160,14 @@ class ALGraph():
 
     def __remove_edge1(self, v1, v2):
         temp = self.l1[v1].firstarc
-        if temp == None:# 遍历时若有无邻边的顶点则直接返回
+        if temp == None: # 遍历时若有无邻边的顶点则直接返回
             return
-        if temp.data == v2:# 若是第一个邻接节点
+        if temp.data == v2: # 若是第一个邻接节点
             self.l1[v1].firstarc = temp.nextarc
             temp.nextarc == None
 
-        while (temp != None and temp.nextarc != None):# 循环到邻接链表尾部,由于是比较下一个元素的值，到倒数第二个即可
-            if temp.nextarc.data == v2:# 如果当前节点的下一个节点匹配
+        while (temp != None and temp.nextarc != None): # 循环到邻接链表尾部,由于是比较下一个元素的值，到倒数第二个即可
+            if temp.nextarc.data == v2: # 如果当前节点的下一个节点匹配
                 temp2 = temp.nextarc
                 temp.nextarc = temp2.nextarc
                 temp2.nextarc = None
@@ -191,6 +191,50 @@ class ALGraph():
             print(tstr)
         print("~~~~~~~~~~~~~~~~~~")
 
+temp = []
+queue = []
+def BSFTraverse(g):
+    global temp, queue
+    for i in range(0,g.size):
+        temp.append(False)
+    # InitQueue(g)
+    for i in range(0,g.size):
+        if temp[i] == False:
+            BSF(g,i)
+
+def BSF(g, i):
+    global temp, queue
+    temp[i] = True
+    print(i)
+    queue.append(i)
+    while (len(queue) != 0):
+        i = queue.pop(0)
+        w = g.first_neighbor(i)
+        while (w >0 ):
+            if temp[w] == False:
+                print(w)
+                temp[w] = True
+                queue.append(w)
+            w = g.next_neighbor(i,w)
+
+def DSFTraverse(g):
+    global temp, queue
+    for i in range(0, g.size):
+        temp.append(False)
+    for i in range(0,g.size):
+        if temp[i] == False:
+            DSF(g,i)
+
+def DSF(g, i):
+    print(i)
+    temp[i] = True
+    w = g.first_neighbor(i)
+    while (w > 0):
+        if temp[i] == False:
+            DSF(g,w)
+        w = g.next_neighbor(i, w)
+
+
 if __name__ == '__main__':
     # mg = MGrapg(5)
     # mg.printGrape()
@@ -209,20 +253,33 @@ if __name__ == '__main__':
     #     print(nigeh)
     #     nigeh = mg.next_neighbor(1,nigeh)
 
-    alg = ALGraph(5)
-    alg.printGrape()
-    alg.add_edge(0, 1)
-    alg.add_edge(1, 2)
-    alg.add_edge(4, 3)
-    alg.printGrape()
-    alg.insert_vertex()
-    alg.printGrape()
-    alg.add_edge(1, 4)
-    alg.add_edge(1, 5)
-    alg.printGrape()
-    alg.delete_vertex(4)
-    alg.printGrape()
-    nigeh = alg.first_neighbor(1)
-    while (nigeh != -1):
-        print(nigeh)
-        nigeh = alg.next_neighbor(1,nigeh)
+    # alg = ALGraph(5)
+    # alg.printGrape()
+    # alg.add_edge(0, 1)
+    # alg.add_edge(1, 2)
+    # alg.add_edge(4, 3)
+    # alg.printGrape()
+    # alg.insert_vertex()
+    # alg.printGrape()
+    # alg.add_edge(1, 4)
+    # alg.add_edge(1, 5)
+    # alg.printGrape()
+    # alg.delete_vertex(4)
+    # alg.printGrape()
+    # nigeh = alg.first_neighbor(1)
+    # while (nigeh != -1):
+    #     print(nigeh)
+    #     nigeh = alg.next_neighbor(1,nigeh)
+    g = MGrapg(7)
+    # g = ALGraph(7)
+    l = [[0,6],[1,6],[1,4],[2,4],[2,3],[5,3],[2,5],[0,5]]
+    for a in l:
+        g.add_edge(a[0], a[1])
+    # mg.printGrape()
+    # mg = MGrapg(3)
+    # mg.add_edge(0,1)
+    # mg.add_edge(0, 2)
+    # mg.add_edge(2, 1)
+    # BSFTraverse(g)
+    DSFTraverse(g)
+
