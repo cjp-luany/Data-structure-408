@@ -1,3 +1,6 @@
+import random
+from DataStructureClass import DStack
+
 # 邻接矩阵图定义
 class MGrapg():
     def __init__(self, n, type = 0):
@@ -60,7 +63,7 @@ class MGrapg():
 
     # 获得下一个邻接节点，返回值为序号
     def next_neighbor(self, v, x):
-        if v+1 >= self.size:
+        if x+1 >= self.size:
             return -1
         for i in range(x+1, self.size):
             if self.l1[v][i] != 0:
@@ -131,7 +134,7 @@ class ALGraph():
         if self.TYPE == 0:
             self.__add_edge0(v1, v2)
         else:
-            self.__add_edge0(v1, v2)
+            self.__add_edge1(v1, v2)
 
     def __add_edge0(self,v1, v2 ):# 无向图加边等于有向图连一次，交换次序再连一次
         self.__add_edge1(v1, v2)
@@ -193,16 +196,16 @@ class ALGraph():
 
 temp = []
 queue = []
-def BSFTraverse(g):
+def BFSTraverse(g):
     global temp, queue
     for i in range(0,g.size):
         temp.append(False)
     # InitQueue(g)
     for i in range(0,g.size):
         if temp[i] == False:
-            BSF(g,i)
+            BFS(g, i)
 
-def BSF(g, i):
+def BFS(g, i):
     global temp, queue
     temp[i] = True
     print(i)
@@ -217,23 +220,112 @@ def BSF(g, i):
                 queue.append(w)
             w = g.next_neighbor(i,w)
 
-def DSFTraverse(g):
+def DFSTraverse(g):
     global temp, queue
     for i in range(0, g.size):
         temp.append(False)
     for i in range(0,g.size):
         if temp[i] == False:
-            DSF(g,i)
+            DFS(g, i)
 
-def DSF(g, i):
+def DFS(g, i):
     print(i)
     temp[i] = True
     w = g.first_neighbor(i)
     while (w > 0):
         if temp[i] == False:
-            DSF(g,w)
+            DFS(g, w)
         w = g.next_neighbor(i, w)
 
+# 判断是否为树
+def isTree(g):
+    temp = []
+    for i in range(0, g.size):
+        temp.append(False)
+    i = 0
+    j = 0
+    i,j = DFS_tree(g, 0, i, j, temp)
+    print(i,j)
+    if i == g.size and i*2-2 == j:
+        return True
+    else:
+        return False
+
+# 判断是否为树——递归主体
+def DFS_tree(g, n, i, j, temp):
+    temp[n] = True
+    w = g.first_neighbor(n)
+    i += 1
+    while w!= -1:
+        j += 1
+        if temp[w] == False:
+            i,j = DFS_tree(g, w, i, j, temp)
+        w = g.next_neighbor(n, w)
+    return i,j
+
+# 无递归DFS
+def DFS__stack(g):
+    temp = []
+    for i in range(0, g.size):
+        temp.append(False)
+    # InitStack(s)
+    s = DStack()
+    for i in range(0,g.size):
+        if temp[i] == False:
+            s.push(i)
+            w = g.first_neighbor(i)
+            while w != -1:
+                if temp[w] == False:
+                    s.push(w)
+                    temp[w] = True
+                w = g.next_neighbor(i, w)
+    while s.noEmp():
+        print(s.pop())
+
+def DFS__stack2(g):
+    temp = []
+    for i in range(0, g.size):
+        temp.append(False)
+    # InitStack(s)
+    s = DStack()
+    for i in range(0,g.size):
+        if temp[i] == False:
+            s.push(i)
+            temp[i] = True
+            while s.noEmp(): # 栈不为空
+                t = s.pop()
+                print(t)
+                w = g.first_neighbor(i)
+                while w != -1:
+                    if temp[w] == False:
+                        s.push(w)
+                        temp[w] = True
+                    w = g.next_neighbor(i, w)
+
+def have_neighbor_DFS(g,v1,v2):
+    temp = []
+    # InitQueue(q)
+    q = []
+    for i in range(0,g.size):
+        temp.append(False)
+    q.append(v1)
+    temp[v1] = True
+    while (len(q) != 0):
+        t = q.pop(0)
+        w= g.first_neighbor(t)
+        if t == v2:
+            return True
+        while(w != -1):
+            if temp[w] == False:
+                q.append(w)
+                print(w)
+                temp[w] = True
+            w = g.next_neighbor(t,w)
+    return False
+
+
+def have_neighbor_BFS(g,v1,v2):
+    pass
 
 if __name__ == '__main__':
     # mg = MGrapg(5)
@@ -270,16 +362,33 @@ if __name__ == '__main__':
     # while (nigeh != -1):
     #     print(nigeh)
     #     nigeh = alg.next_neighbor(1,nigeh)
-    g = MGrapg(7)
+    g = ALGraph(7,1)
     # g = ALGraph(7)
-    l = [[0,6],[1,6],[1,4],[2,4],[2,3],[5,3],[2,5],[0,5]]
-    for a in l:
+    l = [[0,6],[1,6],[1,4],[2,4],[2,5],[0,5],[6,4]]
+    l2 = [[1,4],[1,5],[2,1],[3,2],[3,5],[4,2],[5,0],[5,6],[6,4]]
+    for a in l2:
         g.add_edge(a[0], a[1])
     # mg.printGrape()
     # mg = MGrapg(3)
     # mg.add_edge(0,1)
     # mg.add_edge(0, 2)
     # mg.add_edge(2, 1)
-    # BSFTraverse(g)
-    DSFTraverse(g)
-
+    # BFSTraverse(g)
+    # DFSTraverse(g)
+    # g2 = MGrapg(7) # 树
+    # g = ALGraph(7)
+    # l = [[0,6],[1,6],[6,4],[5,3],[2,5],[0,5]]
+    # for a in l:
+    #     g2.add_edge(a[0], a[1])
+    # g2.printGrape()
+    # BFSTraverse(g2)
+    # DFSTraverse(g)
+    # print("````````````")
+    # print(isTree(g))
+    # print(isTree(g2))
+    # DFS__stack(g)
+    # print("````````````")
+    # DFS__stack2(g)
+    # g.printGrape()
+    print(have_neighbor_DFS(g, 1, 0))
+    print(have_neighbor_DFS(g, 1, 3))
