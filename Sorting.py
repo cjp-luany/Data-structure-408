@@ -145,12 +145,109 @@ def select(l):
     i = 0
     n = len(l) - 1
     while i < n:
-        while l[i] % 2 == 1 and i < n:
+        while i < n and l[i] % 2 == 1 :
             i += 1
-        while l[n] % 2 == 0 and i < n:
+        while i < n and l[n] % 2 == 0 :
             n -= 1
         l[i], l[n] = l[n], l[i]
 
+# 划分子集问题
+def minn_maxs(l):
+    return qminn_maxs(l,0,len(l) - 1)
+
+def qminn_maxs(l, left, right):
+    lastleft = 0
+    lastright = len(l) - 1
+    while True:
+        key = l[left]
+        while left < right:
+            while left < right and l[right] >= key:
+                right -= 1
+            l[left] = l[right]
+            while left < right and l[left] <= key:
+                left += 1
+            l[right] = l[left]
+        l[left] = key
+        if left == int(len(l)/2):
+            return left
+        if left < int(len(l)/2):
+            left += 1
+            lastleft = left
+            right = lastright
+        else:
+            lastright -= 1
+            right =  lastright
+            left = lastleft
+
+# 选择排序（无标记、交换法）
+@ Time_count.timecount
+def select_sort1(l):
+    i = 0
+    n = len(l)
+    while (i < n):
+        j = i
+        min = i
+        while (j < n):
+            if l[j] < l[min]:
+                min = j
+            j = j + 1
+        l[i], l[min] = l[min], l[i]
+        i = i + 1
+
+# 选择排序（无标记、插入删除法）
+@ Time_count.timecount
+def select_sort2(l):
+    i = 0
+    n = len(l)
+    while (i < n):
+        j = i
+        min = i
+        while (j < n):
+            if l[j] < l[min]:
+                min = j
+            j = j + 1
+        l.insert(i, l[min])
+        l.pop(min + 1)
+        i = i + 1
+
+# 选择排序（有标记、交换法）
+@ Time_count.timecount
+def select_sort3(l):
+    i = 0
+    n = len(l)
+    while (i < n):
+        j = i
+        min = i
+        tag = True
+        while (j < n):
+            if l[j] < l[min]:
+                tag = False
+                min = j
+            j = j + 1
+        if tag:
+            break
+        l[i], l[min] = l[min], l[i]
+        i = i + 1
+
+# 选择排序（有标记、插入删除法）
+@ Time_count.timecount
+def select_sort4(l):
+    i = 0
+    n = len(l)
+    while (i < n):
+        j = i
+        min = i
+        tag = True
+        while (j < n):
+            if l[j] < l[min]:
+                tag = False
+                min = j
+            j = j + 1
+        if tag:
+            break
+        l.insert(i, l[min])
+        l.pop(min + 1)
+        i = i + 1
 
 if __name__ == '__main__':
     l = []
@@ -164,5 +261,11 @@ if __name__ == '__main__':
     # insert_sort2(l)
     # shell_sort(l)
     # quick_sort(l)
-    select(l)
+    # select(l)
+    # s = minn_maxs(l)
+    # print(s)
+    # select_sort1(l)
+    # select_sort2(l)
+    # select_sort3(l)
+    # select_sort4(l)
     print(l)
