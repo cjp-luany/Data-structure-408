@@ -324,8 +324,6 @@ def have_neighbor_DFS(g,v1,v2):
     return False
 
 
-def have_neighbor_BFS(g,v1,v2):
-    pass
 
 if __name__ == '__main__':
     # mg = MGrapg(5)
@@ -364,9 +362,9 @@ if __name__ == '__main__':
     #     nigeh = alg.next_neighbor(1,nigeh)
     g = ALGraph(7,1)
     # g = ALGraph(7)
-    l = [[0,6],[1,6],[1,4],[2,4],[2,5],[0,5],[6,4]]
+    l = [[0,6],[1,6],[1,4],[2,4],[2,5],[0,5],[6,4],]
     l2 = [[1,4],[1,5],[2,1],[3,2],[3,5],[4,2],[5,0],[5,6],[6,4]]
-    for a in l2:
+    for a in l:
         g.add_edge(a[0], a[1])
     # mg.printGrape()
     # mg = MGrapg(3)
@@ -390,5 +388,3 @@ if __name__ == '__main__':
     # print("````````````")
     # DFS__stack2(g)
     # g.printGrape()
-    print(have_neighbor_DFS(g, 1, 0))
-    print(have_neighbor_DFS(g, 1, 3))
